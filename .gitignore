@@ -1,0 +1,5 @@
+*.iml
+docker/agent-jar-with-dependencies.jar
+**/.DS_Store
+.idea/
+target
