@@ -22,15 +22,15 @@ public class HttpResponseTransformer implements ClassFileTransformer {
         if (className.equalsIgnoreCase("org/apache/catalina/connector/Response")) {
             final ClassReader reader = new ClassReader(classfileBuffer);
             final ClassWriter writer = new ClassWriter(reader, ClassWriter.COMPUTE_MAXS);
-            final ClassVisitor visitor = new ScreenClassVisitor(Opcodes.ASM5, writer);
+            final ClassVisitor visitor = new SqreenClassVisitor(Opcodes.ASM5, writer);
             reader.accept(visitor, 0);
             return writer.toByteArray();
         }
         return classfileBuffer;
     }
 
-    class ScreenClassVisitor extends ClassVisitor {
-        public ScreenClassVisitor(int api, ClassVisitor cv) {
+    class SqreenClassVisitor extends ClassVisitor {
+        public SqreenClassVisitor(int api, ClassVisitor cv) {
             super(api, cv);
         }
 
