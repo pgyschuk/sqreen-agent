@@ -1,5 +1,6 @@
 package com.sqreen.agent;
 
+import org.apache.catalina.connector.Response;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
@@ -11,7 +12,9 @@ import java.security.ProtectionDomain;
 
 import static org.objectweb.asm.Opcodes.ALOAD;
 
-
+/**
+ * Class for transforming of {@link Response} and adding custom header to each request
+ */
 public class HttpResponseTransformer implements ClassFileTransformer {
 
     public byte[] transform(ClassLoader loader,
@@ -29,6 +32,14 @@ public class HttpResponseTransformer implements ClassFileTransformer {
         return classfileBuffer;
     }
 
+    /**
+     * Class intercepting {@link Response} and modifying byte code of {@link Response#finishResponse()} method
+     * Adding 4 instructions after original code:
+     *  - loading 'this' reference
+     *  - putting header name value to stack
+     *  - putting header value to stack
+     *  - adding instruction to execute addHeader method for 'this' with parameters added to stack
+     */
     class SqreenClassVisitor extends ClassVisitor {
         public SqreenClassVisitor(int api, ClassVisitor cv) {
             super(api, cv);
